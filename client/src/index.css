@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #8B5CF6;
+  --secondary: #F59E0B;
+  --bg-dark: #0f0a1a;
+  --bg-card: #1a1025;
+  --bg-card-hover: #251435;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, var(--bg-dark) 0%, #1a0a2e 100%);
+  min-height: 100vh;
+  color: #e5e5e5;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7c3aed;
+}
+
+/* Fire animation for streak */
+@keyframes flame {
+  0%, 100% {
+    transform: scaleY(1) scaleX(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scaleY(1.1) scaleX(0.95);
+    filter: brightness(1.2);
+  }
+}
+
+.fire-animation {
+  animation: flame 0.5s ease-in-out infinite;
+}
+
+/* Glow effects */
+.glow-purple {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+.glow-gold {
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+}
+
+/* Pet bounce animation */
+@keyframes pet-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.pet-bounce {
+  animation: pet-bounce 1s ease-in-out infinite;
+}
+
+/* Egg shake animation */
+@keyframes egg-shake {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
+}
+
+.egg-shake {
+  animation: egg-shake 0.3s ease-in-out infinite;
+}
+
+/* XP bar animation */
+@keyframes xp-fill {
+  from {
+    width: 0%;
+  }
+}
+
+.xp-bar-animate {
+  animation: xp-fill 1s ease-out;
+}

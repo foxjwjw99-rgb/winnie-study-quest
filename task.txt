@@ -1,0 +1,41 @@
+Create a complete gamified study tracking web application called "Winnie's Study Quest" for helping Winnie prepare for her 成大心理轉學考 (National Cheng Kung University Psychology Transfer Exam).
+
+TECH STACK:
+- Frontend: React + Vite + Tailwind CSS + Framer Motion
+- Backend: Node.js + Express + SQLite
+- Design: Dark theme with purple (#8B5CF6) and gold (#F59E0B) RPG aesthetic
+
+CORE FEATURES:
+
+1. Simple Auth (username-only, no password)
+2. User Profile with level/XP system
+3. Daily Quest System (reset at midnight Taiwan time)
+4. Streak tracking with fire animation
+5. Achievement system
+6. Shop system (buy items with XP)
+7. Boss Battle system (monthly mock exams)
+8. Statistics dashboard
+
+POKEMON-STYLE PET COLLECTION SYSTEM:
+
+8 Pets total:
+- 📊 Stat-Chan (Statistics) - Common ⭐
+- 🧠 Psycho-Kun (Psychology) - Common ⭐  
+- 📚 Book-Nyan - Rare ⭐⭐
+- 🔥 Flame-Sprite - Rare ⭐⭐
+- 💎 Diamond-Owl - Epic ⭐⭐⭐
+- 🌟 Golden-Phoenix - Legendary ⭐⭐⭐⭐
+- 🎓 Professor-Panda - Epic ⭐⭐⭐
+- ☕ Coffee-Slime - Common ⭐
+
+Pet Features:
+- Egg hatching (3 Pomodoros = +1 progress, need 10 to hatch)
+- Pet leveling (Lv.1-10)
+- Pet interactions (feed, pat, play)
+- Pokedex-style collection tracker
+- Pet shop (buy eggs with XP)
+
+Initialize the project with npm create vite@latest, set up complete file structure, implement all features with proper error handling and data persistence. Use emoji-based visuals for pets. Make it production-ready.
+
+When COMPLETELY FINISHED, run:
+openclaw gateway wake --text "Done: Winnie's Study Quest complete!" --mode now
