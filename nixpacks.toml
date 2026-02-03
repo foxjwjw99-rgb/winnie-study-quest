@@ -1,15 +1,17 @@
+providers = []
+
 [phases.setup]
-nixPkgs = ["python3", "gcc", "gnumake", "nodejs", "npm"]
+nixPkgs = ["...", "python3", "gcc", "gnumake"]
 
 [phases.install]
-cmds = ["npm install --include=dev"]
+dependsOn = ["setup"]
 
 [phases.build]
+dependsOn = ["install"]
 cmds = [
-  "cd client && npm install",
   "cd client && npm run build",
-  "cd client/server && npm install"
+  "cd client/server && npm run build"
 ]
 
 [start]
-cmd = "cd client/server && npm start"
+cmd = "cd client/server && node dist/index.js"
