@@ -1,7 +1,8 @@
 providers = []
 
 [phases.setup]
-nixPkgs = ["...", "python3", "gcc", "gnumake"]
+nixPkgs = ["...", "python3", "pkg-config"]
+nixLibs = ["stdenv.cc.cc.lib"]
 
 [phases.install]
 dependsOn = ["setup"]
