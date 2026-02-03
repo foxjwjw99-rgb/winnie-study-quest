@@ -10,9 +10,8 @@ dependsOn = ["setup"]
 [phases.build]
 dependsOn = ["install"]
 cmds = [
-  "cd client && npm run build",
-  "cd client/server && npm run build"
+  "npm run build"
 ]
 
 [start]
-cmd = "cd client/server && node dist/index.js"
+cmd = "npm start"
