@@ -1,0 +1,8 @@
+node_modules
+client/node_modules
+dist
+client/dist
+.git
+.DS_Store
+study_quest.db
+study_quest.db-journal

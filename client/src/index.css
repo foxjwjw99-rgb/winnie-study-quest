@@ -1,11 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --primary: #8B5CF6;
-  --secondary: #F59E0B;
-  --bg-dark: #0f0a1a;
-  --bg-card: #1a1025;
-  --bg-card-hover: #251435;
+  /* Cute Palette */
+  --primary: #FF9EAA;      /* Sakura Pink */
+  --primary-dark: #FF7E8E; /* Darker Pink */
+  --secondary: #FFD580;    /* Soft Orange/Gold */
+  --accent: #B088F9;       /* Lavender */
+  
+  --bg-main: #FFF8F3;      /* Creamy White Background */
+  --bg-card: #FFFFFF;      /* Pure White Card */
+  --bg-input: #FFF0F5;     /* Lavender Blush */
+  
+  --text-main: #4A403A;    /* Chocolate Text */
+  --text-light: #8D817B;   /* Light Brown Text */
+  
+  --shadow-soft: 0 4px 20px rgba(255, 158, 170, 0.15);
+  --shadow-hover: 0 8px 30px rgba(255, 158, 170, 0.25);
+  
+  --radius-l: 24px;
+  --radius-m: 16px;
+  --radius-s: 12px;
 }
 
 * {
@@ -15,97 +30,87 @@
 }
 
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background: linear-gradient(135deg, var(--bg-dark) 0%, #1a0a2e 100%);
+  font-family: 'Nunito', 'Quicksand', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-main);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(255, 158, 170, 0.1) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(176, 136, 249, 0.1) 0%, transparent 20%);
   min-height: 100vh;
-  color: #e5e5e5;
+  color: var(--text-main);
+  line-height: 1.6;
 }
 
 #root {
   min-height: 100vh;
+  width: 100%;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - Cute version */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-dark);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 4px;
+  background: #FFCDD2;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #7c3aed;
+  background: var(--primary);
 }
 
-/* Fire animation for streak */
-@keyframes flame {
-  0%, 100% {
-    transform: scaleY(1) scaleX(1);
-    filter: brightness(1);
-  }
-  50% {
-    transform: scaleY(1.1) scaleX(0.95);
-    filter: brightness(1.2);
-  }
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
 }
 
-.fire-animation {
-  animation: flame 0.5s ease-in-out infinite;
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
 
-/* Glow effects */
-.glow-purple {
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+@keyframes bounce-soft {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
-.glow-gold {
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+.animate-bounce-soft {
+  animation: bounce-soft 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Pet bounce animation */
-@keyframes pet-bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+/* Utility Classes for Cute UI */
+.card-cute {
+  background: var(--bg-card);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-soft);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
 }
 
-.pet-bounce {
-  animation: pet-bounce 1s ease-in-out infinite;
+.card-cute:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  border-color: #FFF0F5;
 }
 
-/* Egg shake animation */
-@keyframes egg-shake {
-  0%, 100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(-5deg);
-  }
-  75% {
-    transform: rotate(5deg);
-  }
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  border-radius: var(--radius-m);
+  font-weight: 700;
+  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(255, 158, 170, 0.3);
 }
 
-.egg-shake {
-  animation: egg-shake 0.3s ease-in-out infinite;
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
 }
 
-/* XP bar animation */
-@keyframes xp-fill {
-  from {
-    width: 0%;
-  }
-}
-
-.xp-bar-animate {
-  animation: xp-fill 1s ease-out;
+.btn-primary:active {
+  transform: translateY(1px);
 }

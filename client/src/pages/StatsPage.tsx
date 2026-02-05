@@ -35,49 +35,67 @@ export const StatsPage: React.FC = () => {
       label: '總學習時間',
       value: `${Math.floor(stats.totalStudyTime / 60)}h ${stats.totalStudyTime % 60}m`,
       color: 'blue',
+      bgColor: 'bg-blue-100',
+      iconColor: 'text-blue-500',
+      textColor: 'text-blue-600',
     },
     {
       icon: Target,
       label: '完成任務',
       value: stats.questsCompleted,
       color: 'green',
+      bgColor: 'bg-green-100',
+      iconColor: 'text-green-500',
+      textColor: 'text-green-600',
     },
     {
       icon: Trophy,
       label: '番茄鐘',
       value: stats.pomodorosCompleted,
       color: 'red',
+      bgColor: 'bg-red-100',
+      iconColor: 'text-red-500',
+      textColor: 'text-red-600',
     },
     {
       icon: Swords,
       label: 'Boss擊敗',
       value: stats.bossesDefeated,
       color: 'orange',
+      bgColor: 'bg-orange-100',
+      iconColor: 'text-orange-500',
+      textColor: 'text-orange-600',
     },
     {
       icon: Cat,
       label: '寵物收集',
       value: `${stats.petsCollected}/8`,
       color: 'pink',
+      bgColor: 'bg-pink-100',
+      iconColor: 'text-pink-500',
+      textColor: 'text-pink-600',
     },
     {
       icon: Flame,
       label: '最長連續',
       value: `${stats.longestStreak}天`,
       color: 'amber',
+      bgColor: 'bg-amber-100',
+      iconColor: 'text-amber-500',
+      textColor: 'text-amber-600',
     },
   ] : [];
 
   const maxXp = Math.max(...dailyStats.map((d) => d.xpEarned), 1);
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto px-4 pb-20">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <BarChart3 className="text-purple-400" size={32} />
+      <div className="flex items-center gap-3 mb-6 mt-4">
+        <BarChart3 className="text-pink-500" size={32} />
         <div>
-          <h1 className="text-2xl font-bold text-white">學習統計</h1>
-          <p className="text-gray-400">追蹤你的學習進度</p>
+          <h1 className="text-2xl font-bold text-gray-800">學習統計</h1>
+          <p className="text-gray-500">追蹤你的學習進度</p>
         </div>
       </div>
 
@@ -95,17 +113,17 @@ export const StatsPage: React.FC = () => {
         <>
           {/* Overview Card */}
           <motion.div
-            className="bg-gradient-to-r from-purple-600/20 to-amber-600/20 rounded-2xl p-6 border border-purple-500/30 mb-6"
+            className="bg-gradient-to-r from-pink-100 to-orange-100 rounded-2xl p-6 border border-pink-200 mb-6 shadow-sm"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 mb-1">總經驗值</p>
-                <p className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent">
+                <p className="text-gray-600 mb-1 font-medium">總經驗值</p>
+                <p className="text-4xl font-bold text-pink-600">
                   {user.totalXp.toLocaleString()} XP
                 </p>
-                <p className="text-purple-300 mt-1">等級 {level}</p>
+                <p className="text-pink-500 mt-1 font-medium">等級 {level}</p>
               </div>
 
               <div className="text-center">
@@ -116,30 +134,30 @@ export const StatsPage: React.FC = () => {
                 >
                   🎓
                 </motion.div>
-                <p className="text-gray-400 text-sm">成大心理系</p>
-                <p className="text-purple-300 text-sm">轉學考備戰中</p>
+                <p className="text-gray-600 text-sm font-medium">成大心理系</p>
+                <p className="text-pink-500 text-sm">轉學考備戰中</p>
               </div>
             </div>
           </motion.div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
             {statCards.map((stat, index) => (
               <motion.div
                 key={stat.label}
-                className={`bg-[#1a1025] rounded-xl p-4 border border-${stat.color}-500/20`}
+                className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.02 }}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`p-3 bg-${stat.color}-500/20 rounded-xl`}>
-                    <stat.icon className={`text-${stat.color}-400`} />
+                  <div className={`p-3 ${stat.bgColor} rounded-xl`}>
+                    <stat.icon className={stat.iconColor} size={24} />
                   </div>
                   <div>
-                    <p className="text-gray-400 text-sm">{stat.label}</p>
-                    <p className={`text-2xl font-bold text-${stat.color}-300`}>
+                    <p className="text-gray-500 text-sm">{stat.label}</p>
+                    <p className={`text-xl font-bold ${stat.textColor}`}>
                       {stat.value}
                     </p>
                   </div>
@@ -150,13 +168,13 @@ export const StatsPage: React.FC = () => {
 
           {/* Weekly Chart */}
           <motion.div
-            className="bg-[#1a1025] rounded-2xl p-6 border border-purple-500/20"
+            className="bg-white rounded-2xl p-6 border border-pink-100 shadow-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
             <div className="flex items-center gap-2 mb-6">
-              <TrendingUp className="text-purple-400" />
-              <h3 className="text-lg font-semibold text-white">過去7天 XP</h3>
+              <TrendingUp className="text-pink-500" />
+              <h3 className="text-lg font-semibold text-gray-800">過去7天 XP</h3>
             </div>
 
             <div className="flex items-end justify-between h-48 gap-2">
@@ -173,11 +191,11 @@ export const StatsPage: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <div className="text-xs text-amber-400 mb-1">
+                    <div className="text-xs text-orange-500 mb-1 font-medium">
                       {day.xpEarned > 0 ? `+${day.xpEarned}` : '0'}
                     </div>
                     <motion.div
-                      className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t-lg"
+                      className="w-full bg-gradient-to-t from-pink-400 to-pink-300 rounded-t-lg"
                       initial={{ height: 0 }}
                       animate={{ height: `${Math.max(height, 5)}%` }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -191,11 +209,11 @@ export const StatsPage: React.FC = () => {
 
           {/* Daily Stats Details */}
           <motion.div
-            className="mt-6 bg-[#1a1025] rounded-2xl p-6 border border-purple-500/20"
+            className="mt-6 bg-white rounded-2xl p-6 border border-pink-100 shadow-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            <h3 className="text-lg font-semibold text-white mb-4">每日詳情</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">每日詳情</h3>
             <div className="space-y-3">
               {dailyStats.map((day) => {
                 const date = new Date(day.date);
@@ -208,18 +226,18 @@ export const StatsPage: React.FC = () => {
                 return (
                   <div
                     key={day.date}
-                    className="flex items-center justify-between py-3 border-b border-gray-800 last:border-0"
+                    className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0"
                   >
-                    <span className="text-gray-300">{dateStr}</span>
-                    <div className="flex items-center gap-6 text-sm">
-                      <span className="text-green-400">
+                    <span className="text-gray-600 font-medium">{dateStr}</span>
+                    <div className="flex items-center gap-4 text-sm">
+                      <span className="text-green-600 bg-green-50 px-2 py-1 rounded-lg">
                         <Target size={14} className="inline mr-1" />
                         {day.questsCompleted} 任務
                       </span>
-                      <span className="text-red-400">
+                      <span className="text-red-500 bg-red-50 px-2 py-1 rounded-lg">
                         🍅 {day.pomodorosCompleted}
                       </span>
-                      <span className="text-amber-400 font-bold">
+                      <span className="text-orange-500 font-bold bg-orange-50 px-2 py-1 rounded-lg">
                         +{day.xpEarned} XP
                       </span>
                     </div>
@@ -235,7 +253,7 @@ export const StatsPage: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            <p className="text-gray-400">
+            <p className="text-gray-500 font-medium">
               📚 持續努力，成大心理系在等著你！加油 Winnie！ 💪
             </p>
           </motion.div>
@@ -244,3 +262,4 @@ export const StatsPage: React.FC = () => {
     </div>
   );
 };
+

@@ -29,72 +29,80 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--bg-main)]">
       <motion.div
         className="w-full max-w-md"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
         {/* Logo & Title */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-10">
           <motion.div
-            className="text-6xl mb-4"
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
+            className="text-7xl mb-4"
+            animate={{ y: [0, -10, 0], rotate: [0, 5, -5, 0] }}
+            transition={{ duration: 3, repeat: Infinity }}
           >
-            🎮
+            🐰
           </motion.div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent mb-2">
-            Winnie's Study Quest
+          <h1 className="text-3xl font-extrabold text-[var(--text-main)] mb-4 tracking-wide">
+            Winnie's Quest
           </h1>
-          <p className="text-gray-400">成大心理轉學考 學習冒險</p>
+          <p className="text-[var(--text-light)] font-medium text-lg">成大心理轉學考 學習冒險 ✨</p>
         </div>
 
         {/* Features Preview */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-3 gap-6 mb-12">
           <motion.div
-            className="bg-[#1a1025] p-4 rounded-xl text-center border border-purple-500/20"
-            whileHover={{ scale: 1.05 }}
+            className="bg-white p-4 rounded-[var(--radius-m)] text-center shadow-sm border border-pink-100 flex flex-col items-center gap-2"
+            whileHover={{ y: -5 }}
           >
-            <BookOpen className="mx-auto text-purple-400 mb-2" />
-            <span className="text-gray-300 text-sm">每日任務</span>
+            <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center text-blue-500">
+              <BookOpen size={24} />
+            </div>
+            <span className="text-[var(--text-light)] text-sm font-bold tracking-wide">每日任務</span>
           </motion.div>
           <motion.div
-            className="bg-[#1a1025] p-4 rounded-xl text-center border border-purple-500/20"
-            whileHover={{ scale: 1.05 }}
+            className="bg-white p-4 rounded-[var(--radius-m)] text-center shadow-sm border border-pink-100 flex flex-col items-center gap-2"
+            whileHover={{ y: -5 }}
           >
-            <Trophy className="mx-auto text-amber-400 mb-2" />
-            <span className="text-gray-300 text-sm">成就系統</span>
+            <div className="bg-yellow-100 w-12 h-12 rounded-full flex items-center justify-center text-yellow-500">
+              <Trophy size={24} />
+            </div>
+            <span className="text-[var(--text-light)] text-sm font-bold tracking-wide">成就系統</span>
           </motion.div>
           <motion.div
-            className="bg-[#1a1025] p-4 rounded-xl text-center border border-purple-500/20"
-            whileHover={{ scale: 1.05 }}
+            className="bg-white p-4 rounded-[var(--radius-m)] text-center shadow-sm border border-pink-100 flex flex-col items-center gap-2"
+            whileHover={{ y: -5 }}
           >
-            <Cat className="mx-auto text-pink-400 mb-2" />
-            <span className="text-gray-300 text-sm">寵物收集</span>
+            <div className="bg-pink-100 w-12 h-12 rounded-full flex items-center justify-center text-pink-500">
+              <Cat size={24} />
+            </div>
+            <span className="text-[var(--text-light)] text-sm font-bold tracking-wide">寵物收集</span>
           </motion.div>
         </div>
 
         {/* Login Form */}
         <motion.form
           onSubmit={handleSubmit}
-          className="bg-[#1a1025] rounded-2xl p-6 border border-purple-500/20 glow-purple"
+          className="card-cute p-10"
         >
-          <div className="mb-6">
-            <label className="block text-gray-300 mb-2 text-sm">使用者名稱</label>
+          <div className="mb-8 text-left">
+            <label className="block text-[var(--text-main)] mb-3 text-base font-bold ml-1 tracking-wide">
+              冒險者名稱
+            </label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="輸入你的名稱開始冒險..."
-              className="w-full bg-[#0f0a1a] border border-purple-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors"
+              placeholder="輸入你的名字..."
+              className="w-full bg-pink-50/50 border-2 border-pink-100 rounded-[var(--radius-m)] px-4 py-3 text-[var(--text-main)] placeholder-gray-400 focus:outline-none focus:border-[var(--primary)] focus:bg-white transition-all font-medium"
               autoFocus
             />
           </div>
 
           {error && (
             <motion.p
-              className="text-red-400 text-sm mb-4"
+              className="text-red-400 text-sm mb-4 bg-red-50 p-3 rounded-lg text-center font-bold"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
@@ -105,18 +113,24 @@ export const LoginPage: React.FC = () => {
           <motion.button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 disabled:opacity-50 hover:from-purple-600 hover:to-purple-700 transition-all"
+            className="w-full btn-primary py-4 text-lg flex items-center justify-center gap-2 disabled:opacity-50"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <Sparkles size={20} />
-            {isLoading ? '進入中...' : '開始冒險！'}
+            {isLoading ? (
+              <span className="animate-pulse">準備中...</span>
+            ) : (
+              <>
+                <Sparkles size={20} />
+                開始冒險
+              </>
+            )}
           </motion.button>
         </motion.form>
 
         {/* Footer */}
-        <p className="text-center text-gray-500 text-sm mt-6">
-          為 Winnie 的成大心理轉學考之路加油！ 💪
+        <p className="text-center text-[var(--text-light)] text-xs mt-8 font-medium opacity-60">
+          為 Winnie 加油！ 💪
         </p>
       </motion.div>
     </div>

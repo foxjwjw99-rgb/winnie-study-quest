@@ -1,237 +1,228 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, Target, Trophy, Cat, Clock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { PomodoroTimer } from '../components/PomodoroTimer';
 import { QuestCard } from '../components/QuestCard';
-import { getDailyQuests, completeQuest, getUserPets, addHatchProgress } from '../utils/api';
-import { calculateLevel, getMotivationalQuote, getTimeUntilMidnightTaiwan } from '../utils/helpers';
-import type { Quest, UserPet, Pet } from '../types';
+import { Clock, Calendar, Sparkles, Target } from 'lucide-react';
+import { getStats, getDailyQuests, getDailyStatsHistory, getUserPets, completeQuest } from '../utils/api';
+import type { Quest, DailyStats, UserPet, Pet } from '../types';
 
 export const HomePage: React.FC = () => {
   const { user, updateUser } = useAuth();
-  const [quests, setQuests] = useState<Quest[]>([]);
-  const [pets, setPets] = useState<(UserPet & { pet: Pet })[]>([]);
-  const [quote] = useState(getMotivationalQuote());
-  const [countdown, setCountdown] = useState(getTimeUntilMidnightTaiwan());
+  const [dailyQuests, setDailyQuests] = useState<Quest[]>([]);
+  const [todayStats, setTodayStats] = useState<DailyStats | null>(null);
+  const [activePet, setActivePet] = useState<(UserPet & { pet: Pet }) | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
-      Promise.all([
-        getDailyQuests(user.id),
-        getUserPets(user.id),
-      ]).then(([questsData, petsData]) => {
-        setQuests(questsData);
-        setPets(petsData);
-      }).finally(() => setLoading(false));
+      const fetchData = async () => {
+        try {
+          const [q, ds, pets] = await Promise.all([
+            getDailyQuests(user.id),
+            getDailyStatsHistory(user.id, 1),
+            getUserPets(user.id)
+          ]);
+          setDailyQuests(q);
+          setTodayStats(ds[ds.length - 1] || null);
+          
+          // Select a pet to display (highest level or first hatched)
+          const hatched = pets.filter(p => p.isHatched);
+          if (hatched.length > 0) {
+            // Sort by level desc
+            hatched.sort((a, b) => b.level - a.level);
+            setActivePet(hatched[0]);
+          } else {
+            setActivePet(null);
+          }
+        } catch (error) {
+          console.error("Failed to fetch home data", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
     }
   }, [user]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown(getTimeUntilMidnightTaiwan());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   const handleCompleteQuest = async (questId: string) => {
     try {
       const { quest, user: updatedUser } = await completeQuest(questId);
-      setQuests((prev) =>
+      setDailyQuests((prev) =>
         prev.map((q) => (q.id === questId ? quest : q))
       );
       updateUser(updatedUser);
+      
+      // Refresh stats lightly
+      const [newDaily] = await Promise.all([
+        getDailyStatsHistory(updatedUser.id, 1)
+      ]);
+      setTodayStats(newDaily[newDaily.length - 1] || null);
+      
     } catch (error) {
       console.error('Failed to complete quest:', error);
     }
   };
 
-  const handlePomodoroComplete = async () => {
-    // Add hatch progress to unhatched eggs
-    const unhatched = pets.filter((p) => !p.isHatched);
-    if (unhatched.length > 0 && user) {
-      try {
-        const updatedPet = await addHatchProgress(unhatched[0].id);
-        setPets((prev) =>
-          prev.map((p) => (p.id === updatedPet.id ? { ...p, ...updatedPet } : p))
-        );
-      } catch (error) {
-        console.error('Failed to add hatch progress:', error);
-      }
-    }
-  };
+  if (!user) return null;
 
-  if (!user || loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <motion.div
-          className="text-4xl"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-        >
-          ⏳
-        </motion.div>
-      </div>
-    );
-  }
+  // Calculate Today's Focus Time (Approximate from Pomodoros)
+  // 1 Pomodoro = 25 minutes
+  const todayPomodoros = todayStats?.pomodorosCompleted || 0;
+  const todayFocusHours = (todayPomodoros * 25) / 60;
+  const formattedFocusTime = todayFocusHours % 1 === 0 
+    ? `${todayFocusHours}h` 
+    : `${todayFocusHours.toFixed(1)}h`;
 
-  const { level, currentXp, xpForNext } = calculateLevel(user.totalXp);
-  const completedQuests = quests.filter((q) => q.isCompleted).length;
-  const activePet = pets.find((p) => p.isHatched);
+  const pendingQuestsCount = dailyQuests.filter(q => !q.isCompleted).length;
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      {/* Welcome Banner */}
+    <div className="space-y-8 pb-20 md:pb-0 px-4 mt-4">
+      {/* Welcome Section */}
       <motion.div
-        className="bg-gradient-to-r from-purple-600/20 to-amber-600/20 rounded-2xl p-6 border border-purple-500/30"
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
+        className="text-center md:text-left space-y-2"
       >
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-2">
-              歡迎回來，{user.username}！ 👋
-            </h2>
-            <p className="text-purple-300">{quote}</p>
-          </div>
-
-          {/* Active Pet */}
-          {activePet && (
-            <motion.div
-              className="text-5xl"
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              {activePet.pet.emoji}
-            </motion.div>
-          )}
-        </div>
+        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800">
+          早安, <span className="text-pink-500">{user.username}</span>! ☀️
+        </h2>
+        <p className="text-gray-500 text-lg">
+          今天也要開心地學習喔！加油加油～ ✨
+        </p>
       </motion.div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-4 gap-4">
-        <motion.div
-          className="bg-[#1a1025] rounded-xl p-4 border border-purple-500/20"
-          whileHover={{ scale: 1.02 }}
-        >
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-purple-500/20 rounded-xl">
-              <Trophy className="text-purple-400" />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column: Quests & Timer */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Quick Actions / Stats */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="bg-white rounded-2xl p-4 flex flex-col items-center justify-center text-center shadow-sm border border-orange-100">
+              <div className="bg-orange-100 p-3 rounded-full mb-2 text-orange-500">
+                <Clock size={24} />
+              </div>
+              <span className="text-2xl font-bold text-gray-800">
+                {loading ? '-' : formattedFocusTime}
+              </span>
+              <span className="text-xs text-gray-400 font-bold">今日專注</span>
             </div>
-            <div>
-              <p className="text-gray-400 text-sm">等級</p>
-              <p className="text-2xl font-bold text-purple-300">Lv.{level}</p>
+            <div className="bg-white rounded-2xl p-4 flex flex-col items-center justify-center text-center shadow-sm border border-purple-100">
+              <div className="bg-purple-100 p-3 rounded-full mb-2 text-purple-500">
+                <Calendar size={24} />
+              </div>
+              <span className="text-2xl font-bold text-gray-800">
+                {user.streak}天
+              </span>
+              <span className="text-xs text-gray-400 font-bold">連續登入</span>
             </div>
-          </div>
-          <div className="mt-3">
-            <div className="flex justify-between text-xs text-gray-500 mb-1">
-              <span>{currentXp} XP</span>
-              <span>{xpForNext} XP</span>
-            </div>
-            <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
-              <motion.div
-                className="h-full bg-purple-500"
-                initial={{ width: 0 }}
-                animate={{ width: `${(currentXp / xpForNext) * 100}%` }}
-              />
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="bg-[#1a1025] rounded-xl p-4 border border-orange-500/20"
-          whileHover={{ scale: 1.02 }}
-        >
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-orange-500/20 rounded-xl">
-              <Flame className="text-orange-400 fire-animation" />
-            </div>
-            <div>
-              <p className="text-gray-400 text-sm">連續學習</p>
-              <p className="text-2xl font-bold text-orange-300">{user.streak} 天</p>
+            <div className="bg-white rounded-2xl p-4 flex flex-col items-center justify-center text-center col-span-2 sm:col-span-1 shadow-sm border border-pink-100">
+              <div className="bg-pink-100 p-3 rounded-full mb-2 text-pink-500">
+                <Sparkles size={24} />
+              </div>
+              <span className="text-2xl font-bold text-gray-800">
+                {user.xp}
+              </span>
+              <span className="text-xs text-gray-400 font-bold">目前積分</span>
             </div>
           </div>
-        </motion.div>
 
-        <motion.div
-          className="bg-[#1a1025] rounded-xl p-4 border border-green-500/20"
-          whileHover={{ scale: 1.02 }}
-        >
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-green-500/20 rounded-xl">
-              <Target className="text-green-400" />
+          {/* Daily Quests */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                <Target className="text-pink-500" />
+                每日任務
+              </h3>
+              <span className="text-sm text-pink-500 font-bold bg-pink-50 px-3 py-1 rounded-full">
+                還剩 {pendingQuestsCount} 個
+              </span>
             </div>
-            <div>
-              <p className="text-gray-400 text-sm">今日任務</p>
-              <p className="text-2xl font-bold text-green-300">
-                {completedQuests}/{quests.length}
-              </p>
-            </div>
+            
+            {loading ? (
+               <div className="text-center py-8 text-gray-400">載入中...</div>
+            ) : (
+              <div className="space-y-4">
+                {dailyQuests.map((quest, index) => (
+                  <QuestCard 
+                    key={quest.id} 
+                    quest={quest} 
+                    index={index} 
+                    onComplete={handleCompleteQuest} 
+                  />
+                ))}
+                {dailyQuests.length === 0 && (
+                  <div className="text-center py-8 text-gray-400">
+                    目前沒有任務，去新增一些吧！
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-        </motion.div>
-
-        <motion.div
-          className="bg-[#1a1025] rounded-xl p-4 border border-pink-500/20"
-          whileHover={{ scale: 1.02 }}
-        >
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-pink-500/20 rounded-xl">
-              <Cat className="text-pink-400" />
-            </div>
-            <div>
-              <p className="text-gray-400 text-sm">寵物收集</p>
-              <p className="text-2xl font-bold text-pink-300">
-                {pets.filter((p) => p.isHatched).length}/8
-              </p>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-3 gap-6">
-        {/* Pomodoro Timer */}
-        <div className="col-span-1">
-          <PomodoroTimer onPomodoroComplete={handlePomodoroComplete} />
-
-          {/* Quest Reset Countdown */}
-          <motion.div
-            className="mt-4 bg-[#1a1025] rounded-xl p-4 border border-purple-500/20"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <div className="flex items-center gap-2 text-gray-400 mb-2">
-              <Clock size={16} />
-              <span className="text-sm">任務重置倒數</span>
-            </div>
-            <p className="text-xl font-mono text-purple-300">
-              {String(countdown.hours).padStart(2, '0')}:
-              {String(countdown.minutes).padStart(2, '0')}:
-              {String(countdown.seconds).padStart(2, '0')}
-            </p>
-          </motion.div>
         </div>
 
-        {/* Daily Quests */}
-        <div className="col-span-2">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <Target className="text-purple-400" />
-            今日任務
-          </h3>
-          <div className="space-y-3">
-            {quests.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                載入中...
+        {/* Right Column: Pet & Status */}
+        <div className="space-y-8">
+          <div className="bg-white rounded-2xl p-6 relative overflow-hidden shadow-sm border border-pink-100">
+            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+              🐾 你的夥伴
+            </h3>
+            
+            {activePet ? (
+              <div className="flex flex-col items-center">
+                <motion.div 
+                  className="text-8xl mb-4 cursor-pointer"
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                  whileHover={{ scale: 1.1 }}
+                >
+                  {activePet.pet.emoji}
+                </motion.div>
+                
+                <h4 className="text-xl font-extrabold text-gray-800">{activePet.pet.name}</h4>
+                <p className="text-sm text-gray-400 font-bold mb-4">
+                  Lv.{activePet.level} {activePet.pet.subject}
+                </p>
+
+                {/* Pet Stats */}
+                <div className="w-full space-y-3">
+                  <div>
+                    <div className="flex justify-between text-xs font-bold mb-1">
+                      <span className="text-gray-400">心情 (Happiness)</span>
+                      <span className="text-pink-400">{activePet.happiness}%</span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-2.5">
+                      <div 
+                        className="bg-pink-400 h-2.5 rounded-full transition-all duration-500" 
+                        style={{ width: `${activePet.happiness}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-xs font-bold mb-1">
+                      <span className="text-gray-400">經驗值 (EXP)</span>
+                      <span className="text-orange-400">{activePet.exp}%</span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-2.5">
+                      <div 
+                        className="bg-orange-400 h-2.5 rounded-full transition-all duration-500" 
+                        style={{ width: `${Math.min(activePet.exp, 100)}%` }} // Simplified exp bar
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <button className="w-full mt-6 bg-pink-400 hover:bg-pink-500 text-white font-bold py-3 rounded-xl transition-colors shadow-sm text-sm">
+                  前往互動
+                </button>
               </div>
             ) : (
-              quests.map((quest) => (
-                <QuestCard
-                  key={quest.id}
-                  quest={quest}
-                  onComplete={handleCompleteQuest}
-                />
-              ))
+              <div className="text-center py-8">
+                <div className="text-6xl mb-4">🥚</div>
+                <p className="text-gray-500 font-bold mb-2">還沒有夥伴</p>
+                <p className="text-sm text-gray-400 mb-4">去商店買顆蛋來孵化吧！</p>
+                <button className="w-full bg-amber-400 hover:bg-amber-500 text-white font-bold py-3 rounded-xl transition-colors shadow-sm text-sm">
+                  前往商店
+                </button>
+              </div>
             )}
           </div>
         </div>

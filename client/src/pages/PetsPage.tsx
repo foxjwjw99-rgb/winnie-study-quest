@@ -54,14 +54,14 @@ export const PetsPage: React.FC = () => {
   const collectedPetIds = new Set(hatchedPets.map((p) => p.petId));
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto px-4 pb-20">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 mt-4">
         <div className="flex items-center gap-3">
-          <Cat className="text-pink-400" size={32} />
+          <Cat className="text-pink-500" size={32} />
           <div>
-            <h1 className="text-2xl font-bold text-white">寵物收集</h1>
-            <p className="text-gray-400">
+            <h1 className="text-2xl font-bold text-gray-800">寵物收集</h1>
+            <p className="text-gray-500">
               收集 {hatchedPets.length}/{allPets.length} 隻寵物
             </p>
           </div>
@@ -72,7 +72,7 @@ export const PetsPage: React.FC = () => {
           className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors ${
             showPokedex
               ? 'bg-amber-500 text-white'
-              : 'bg-[#1a1025] text-amber-400 border border-amber-500/30'
+              : 'bg-white text-amber-600 border border-amber-200 shadow-sm hover:bg-amber-50'
           }`}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -94,7 +94,7 @@ export const PetsPage: React.FC = () => {
         </div>
       ) : showPokedex ? (
         /* Pokedex View */
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {allPets.map((pet) => {
             const isCollected = collectedPetIds.has(pet.id);
             const rarityColor = getRarityColor(pet.rarity);
@@ -103,10 +103,10 @@ export const PetsPage: React.FC = () => {
             return (
               <motion.div
                 key={pet.id}
-                className={`bg-[#1a1025] rounded-xl p-4 border transition-all ${
+                className={`bg-white rounded-xl p-4 border transition-all shadow-sm ${
                   isCollected
-                    ? 'border-purple-500/40'
-                    : 'border-gray-700/40 opacity-50'
+                    ? 'border-pink-200'
+                    : 'border-gray-100 opacity-60 grayscale'
                 }`}
                 whileHover={{ scale: 1.02 }}
               >
@@ -124,21 +124,21 @@ export const PetsPage: React.FC = () => {
                       <Star
                         key={i}
                         size={12}
-                        fill={isCollected ? rarityColor : '#4B5563'}
-                        color={isCollected ? rarityColor : '#4B5563'}
+                        fill={isCollected ? rarityColor : '#9CA3AF'}
+                        color={isCollected ? rarityColor : '#9CA3AF'}
                       />
                     ))}
                   </div>
 
-                  <h4 className="font-semibold text-white">
+                  <h4 className="font-semibold text-gray-800">
                     {isCollected ? pet.name : '???'}
                   </h4>
-                  <p className="text-gray-400 text-xs mt-1">
+                  <p className="text-gray-500 text-xs mt-1">
                     {isCollected ? pet.description : '尚未發現'}
                   </p>
 
                   {isCollected && (
-                    <span className="inline-block mt-2 text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full">
+                    <span className="inline-block mt-2 text-xs bg-pink-50 text-pink-600 px-2 py-1 rounded-full">
                       {pet.subject}
                     </span>
                   )}
@@ -153,10 +153,10 @@ export const PetsPage: React.FC = () => {
           {/* Unhatched Eggs */}
           {unhatchedPets.length > 0 && (
             <div>
-              <h3 className="text-lg font-semibold text-amber-300 mb-4">
+              <h3 className="text-lg font-semibold text-amber-600 mb-4">
                 🥚 待孵化 ({unhatchedPets.length})
               </h3>
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {unhatchedPets.map((pet) => (
                   <PetCard
                     key={pet.id}
@@ -172,10 +172,10 @@ export const PetsPage: React.FC = () => {
           {/* Hatched Pets */}
           {hatchedPets.length > 0 && (
             <div>
-              <h3 className="text-lg font-semibold text-purple-300 mb-4">
+              <h3 className="text-lg font-semibold text-pink-600 mb-4">
                 我的寵物 ({hatchedPets.length})
               </h3>
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {hatchedPets.map((pet) => (
                   <PetCard
                     key={pet.id}
@@ -196,8 +196,8 @@ export const PetsPage: React.FC = () => {
               >
                 🥚
               </motion.div>
-              <p className="text-gray-400 mb-2">還沒有寵物</p>
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-500 mb-2">還沒有寵物</p>
+              <p className="text-gray-400 text-sm">
                 去商店購買寵物蛋開始收集吧！
               </p>
             </div>
@@ -209,7 +209,7 @@ export const PetsPage: React.FC = () => {
       <AnimatePresence>
         {showPokedex && (
           <motion.div
-            className="fixed bottom-6 right-6 bg-amber-500/90 text-white px-4 py-2 rounded-full"
+            className="fixed bottom-20 right-6 bg-amber-500 text-white px-4 py-2 rounded-full shadow-lg z-50"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}

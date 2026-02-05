@@ -63,14 +63,14 @@ export const QuestsPage: React.FC = () => {
   const pendingQuests = quests.filter((q) => !q.isCompleted);
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto px-4 pb-20">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 mt-4">
         <div className="flex items-center gap-3">
-          <Target className="text-purple-400" size={32} />
+          <Target className="text-pink-500" size={32} />
           <div>
-            <h1 className="text-2xl font-bold text-white">每日任務</h1>
-            <p className="text-gray-400">
+            <h1 className="text-2xl font-bold text-gray-800">每日任務</h1>
+            <p className="text-gray-500">
               完成 {completedQuests.length}/{quests.length} 個任務
             </p>
           </div>
@@ -78,7 +78,7 @@ export const QuestsPage: React.FC = () => {
 
         <motion.button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-xl font-medium transition-colors"
+          className="flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-xl font-medium transition-colors shadow-sm"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -89,9 +89,9 @@ export const QuestsPage: React.FC = () => {
 
       {/* Progress Bar */}
       <div className="mb-6">
-        <div className="w-full h-3 bg-gray-800 rounded-full overflow-hidden">
+        <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-purple-500 to-amber-500"
+            className="h-full bg-gradient-to-r from-pink-500 to-amber-500"
             initial={{ width: 0 }}
             animate={{
               width: `${(completedQuests.length / Math.max(quests.length, 1)) * 100}%`,
@@ -117,10 +117,10 @@ export const QuestsPage: React.FC = () => {
           {/* Pending Quests */}
           {pendingQuests.length > 0 && (
             <div>
-              <h3 className="text-lg font-semibold text-purple-300 mb-4">
+              <h3 className="text-lg font-semibold text-pink-600 mb-4">
                 待完成 ({pendingQuests.length})
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-5">
                 {pendingQuests.map((quest) => (
                   <QuestCard
                     key={quest.id}
@@ -135,10 +135,10 @@ export const QuestsPage: React.FC = () => {
           {/* Completed Quests */}
           {completedQuests.length > 0 && (
             <div>
-              <h3 className="text-lg font-semibold text-green-300 mb-4">
+              <h3 className="text-lg font-semibold text-green-600 mb-4">
                 已完成 ({completedQuests.length})
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-5">
                 {completedQuests.map((quest) => (
                   <QuestCard
                     key={quest.id}
@@ -155,7 +155,7 @@ export const QuestsPage: React.FC = () => {
               <p className="text-gray-500 mb-4">今天還沒有任務</p>
               <button
                 onClick={() => setShowAddModal(true)}
-                className="text-purple-400 hover:text-purple-300"
+                className="text-pink-500 hover:text-pink-600 font-medium"
               >
                 點擊新增任務
               </button>
@@ -174,16 +174,16 @@ export const QuestsPage: React.FC = () => {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="bg-[#1a1025] rounded-2xl p-6 w-full max-w-md border border-purple-500/30"
+              className="bg-white rounded-2xl p-6 w-full max-w-md border border-pink-200 shadow-xl"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
             >
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-white">新增任務</h3>
+                <h3 className="text-xl font-bold text-gray-800">新增任務</h3>
                 <button
                   onClick={() => setShowAddModal(false)}
-                  className="text-gray-400 hover:text-white"
+                  className="text-gray-400 hover:text-gray-600"
                 >
                   <X size={24} />
                 </button>
@@ -191,23 +191,23 @@ export const QuestsPage: React.FC = () => {
 
               <form onSubmit={handleAddQuest} className="space-y-4">
                 <div>
-                  <label className="block text-gray-300 mb-2 text-sm">任務標題</label>
+                  <label className="block text-gray-600 mb-2 text-sm font-medium">任務標題</label>
                   <input
                     type="text"
                     value={newQuest.title}
                     onChange={(e) => setNewQuest((prev) => ({ ...prev, title: e.target.value }))}
-                    className="w-full bg-[#0f0a1a] border border-purple-500/30 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500"
+                    className="w-full bg-gray-50 border border-pink-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-pink-500"
                     placeholder="例如：複習普通心理學第三章"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-gray-300 mb-2 text-sm">任務描述</label>
+                  <label className="block text-gray-600 mb-2 text-sm font-medium">任務描述</label>
                   <textarea
                     value={newQuest.description}
                     onChange={(e) => setNewQuest((prev) => ({ ...prev, description: e.target.value }))}
-                    className="w-full bg-[#0f0a1a] border border-purple-500/30 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500 resize-none"
+                    className="w-full bg-gray-50 border border-pink-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-pink-500 resize-none"
                     rows={3}
                     placeholder="詳細說明..."
                   />
@@ -215,11 +215,11 @@ export const QuestsPage: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-gray-300 mb-2 text-sm">類別</label>
+                    <label className="block text-gray-600 mb-2 text-sm font-medium">類別</label>
                     <select
                       value={newQuest.category}
                       onChange={(e) => setNewQuest((prev) => ({ ...prev, category: e.target.value as Quest['category'] }))}
-                      className="w-full bg-[#0f0a1a] border border-purple-500/30 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500"
+                      className="w-full bg-gray-50 border border-pink-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-pink-500"
                     >
                       <option value="study">📖 學習</option>
                       <option value="review">🔄 複習</option>
@@ -229,11 +229,11 @@ export const QuestsPage: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-gray-300 mb-2 text-sm">XP獎勵</label>
+                    <label className="block text-gray-600 mb-2 text-sm font-medium">XP獎勵</label>
                     <select
                       value={newQuest.xpReward}
                       onChange={(e) => setNewQuest((prev) => ({ ...prev, xpReward: parseInt(e.target.value) }))}
-                      className="w-full bg-[#0f0a1a] border border-purple-500/30 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500"
+                      className="w-full bg-gray-50 border border-pink-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-pink-500"
                     >
                       <option value={25}>25 XP (簡單)</option>
                       <option value={50}>50 XP (一般)</option>
@@ -245,7 +245,7 @@ export const QuestsPage: React.FC = () => {
 
                 <motion.button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white py-3 rounded-xl font-bold hover:from-purple-600 hover:to-purple-700 transition-all"
+                  className="w-full bg-gradient-to-r from-pink-500 to-pink-600 text-white py-3 rounded-xl font-bold hover:from-pink-600 hover:to-pink-700 transition-all shadow-md"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >

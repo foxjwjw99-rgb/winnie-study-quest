@@ -88,22 +88,22 @@ export const ShopPage: React.FC = () => {
   const otherItems = shopItems.filter((i) => i.type !== 'egg');
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto px-4 pb-20">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 mt-4">
         <div className="flex items-center gap-3">
-          <ShoppingBag className="text-amber-400" size={32} />
+          <ShoppingBag className="text-amber-500" size={32} />
           <div>
-            <h1 className="text-2xl font-bold text-white">商店</h1>
-            <p className="text-gray-400">使用 XP 購買道具</p>
+            <h1 className="text-2xl font-bold text-gray-800">商店</h1>
+            <p className="text-gray-500">使用 XP 購買道具</p>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
           {/* XP Balance */}
-          <div className="flex items-center gap-2 bg-[#1a1025] px-4 py-2 rounded-xl border border-amber-500/30">
-            <Sparkles className="text-amber-400" size={20} />
-            <span className="text-amber-300 font-bold">{user.xp} XP</span>
+          <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-amber-200 shadow-sm">
+            <Sparkles className="text-amber-500" size={20} />
+            <span className="text-amber-600 font-bold">{user.xp} XP</span>
           </div>
 
           {/* Inventory Button */}
@@ -112,7 +112,7 @@ export const ShopPage: React.FC = () => {
             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors ${
               showInventory
                 ? 'bg-purple-500 text-white'
-                : 'bg-[#1a1025] text-purple-400 border border-purple-500/30'
+                : 'bg-white text-purple-600 border border-purple-200 shadow-sm hover:bg-purple-50'
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -136,7 +136,7 @@ export const ShopPage: React.FC = () => {
       ) : showInventory ? (
         /* Inventory View */
         <div className="space-y-6">
-          <h3 className="text-lg font-semibold text-purple-300">我的道具</h3>
+          <h3 className="text-lg font-semibold text-purple-600">我的道具</h3>
 
           {userItems.length === 0 ? (
             <div className="text-center py-12">
@@ -147,26 +147,26 @@ export const ShopPage: React.FC = () => {
               >
                 📦
               </motion.div>
-              <p className="text-gray-400">背包是空的</p>
-              <p className="text-gray-500 text-sm">去商店購買一些道具吧！</p>
+              <p className="text-gray-500">背包是空的</p>
+              <p className="text-gray-400 text-sm">去商店購買一些道具吧！</p>
             </div>
           ) : (
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {userItems.map((userItem) => (
                 <motion.div
                   key={userItem.id}
-                  className="bg-[#1a1025] rounded-xl p-4 border border-purple-500/20"
+                  className="bg-white rounded-xl p-4 border border-purple-100 shadow-sm"
                   whileHover={{ scale: 1.02 }}
                 >
                   <div className="text-center">
                     <div className="text-4xl mb-2">{userItem.item.icon}</div>
-                    <h4 className="font-semibold text-white">{userItem.item.name}</h4>
-                    <p className="text-purple-400 text-sm">x{userItem.quantity}</p>
+                    <h4 className="font-semibold text-gray-800">{userItem.item.name}</h4>
+                    <p className="text-purple-500 text-sm">x{userItem.quantity}</p>
 
                     {userItem.item.type === 'egg' && (
                       <motion.button
                         onClick={() => handleOpenEgg(userItem.item.rarity!)}
-                        className="mt-3 bg-gradient-to-r from-purple-500 to-amber-500 text-white px-4 py-2 rounded-lg text-sm font-medium w-full"
+                        className="mt-3 bg-gradient-to-r from-purple-500 to-amber-500 text-white px-4 py-2 rounded-lg text-sm font-medium w-full shadow-md"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -184,10 +184,10 @@ export const ShopPage: React.FC = () => {
         <div className="space-y-8">
           {/* Eggs Section */}
           <div>
-            <h3 className="text-lg font-semibold text-amber-300 mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-amber-600 mb-4 flex items-center gap-2">
               🥚 寵物蛋
             </h3>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {eggs.map((item) => (
                 <ShopItemCard
                   key={item.id}
@@ -202,10 +202,10 @@ export const ShopPage: React.FC = () => {
 
           {/* Other Items Section */}
           <div>
-            <h3 className="text-lg font-semibold text-purple-300 mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-purple-600 mb-4 flex items-center gap-2">
               🎁 道具
             </h3>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {otherItems.map((item) => (
                 <ShopItemCard
                   key={item.id}
@@ -224,7 +224,7 @@ export const ShopPage: React.FC = () => {
       <AnimatePresence>
         {notification && (
           <motion.div
-            className="fixed bottom-6 right-6 bg-purple-500/90 text-white px-6 py-3 rounded-xl shadow-lg"
+            className="fixed bottom-20 right-6 bg-purple-600/90 text-white px-6 py-3 rounded-xl shadow-lg z-50"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
